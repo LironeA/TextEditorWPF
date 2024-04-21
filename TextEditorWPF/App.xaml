@@ -1,0 +1,10 @@
+﻿<Application x:Class="TextEditorWPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:view="clr-namespace:TextEditorWPF.View"
+             StartupUri="/View/MainWindow.xaml">
+    <Application.Resources>
+         
+    </Application.Resources>
+
+</Application>
