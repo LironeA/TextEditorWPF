@@ -88,6 +88,17 @@ namespace TextEditorWPF.Model
                     return new ImageElement("image");
                 case "url":
                     return new UrlElement("url");
+                case "table":
+                    return new TableElement("table");
+                case "rows":
+                    return new RowsElement("rows");
+                case "row":
+                    return new RowElement("row");
+                case "columns":
+                    return new ColumnsElement("columns");
+                case "column":
+                    return new ColumnElement("column");
+                    
                 default:
                     return new StringElement(token.RawData);
 
@@ -110,6 +121,7 @@ namespace TextEditorWPF.Model
         }
     }
 
+
     public class RootElement : Element
     {
         public RootElement(string data) : base(data) { }
@@ -129,6 +141,8 @@ namespace TextEditorWPF.Model
         public override void Draw(Canvas canvas, ref ElementDrawResult result)
         {
             TextBlock text = new TextBlock();
+            text.TextWrapping = TextWrapping.Wrap;
+            text.MaxWidth = result.CanavsWidth;
             this.elementUi = text;
             text.Text = this.Data;
             result.Properties.Peek().Apply(text);
@@ -272,9 +286,51 @@ namespace TextEditorWPF.Model
         }
     }
 
-    public class SizeElement : Element
-    {
 
+    public class TableElement : Element
+    {
+        public TableElement(string data) : base(data)
+        {
+        }
+
+        public override void Draw(Canvas canvas, ref ElementDrawResult result)
+        {
+            var grid = new Grid();
+
+
+            Canvas.SetLeft(grid, result.X);
+            Canvas.SetTop(grid, result.Y);
+
+        }
+    }
+
+
+    public class ColumnElement : Element
+    {
+        public ColumnElement(string data) : base(data)
+        {
+        }
+    }
+
+    public class ColumnsElement : Element
+    {
+        public ColumnsElement(string data) : base(data)
+        {
+        }
+    }
+
+    public class RowElement : Element
+    {
+        public RowElement(string data) : base(data)
+        {
+        }
+    }
+
+    public class RowsElement : Element
+    {
+        public RowsElement(string data) : base(data)
+        {
+        }
     }
 
 }

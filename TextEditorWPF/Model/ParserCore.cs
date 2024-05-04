@@ -39,9 +39,9 @@ namespace TextEditorWPF.Model
 
         private static readonly Regex DivadersRegex = new Regex(@"([\|\&\\])|([\(\)\^\/\<\>\\\s])");
         private static readonly Regex match = new Regex(@"[<][\/]?\w+[>]|[^<|^>|\s]+");
-        private static readonly Regex match3 = new Regex(@"(?'content'[^<|>|\/|\s]+)|(?'open'[<]([^<|>|\/|\s]+)[>])|(?'close'[<][\/]([^<|>|\/|\s]+)[>])|(?'openprop'[<]([^<|>|\/|\s]+)\s([\s]?([^<|>|\/|\s]+)[=][""""]([^<|>|\/|\s]+)*[""""][\s]?)+[>])");
-        private static readonly Regex matchPropTag = new Regex(@"(?'openprop'[<](?'content'[^<|>|\/|\s]+)(?>\s)(?'prop'[\s]?(?'propName'[^<|>|\/|\s]+)[=][""""](?'propValue'[^<|>|\/|\s]+)*[""""][\s]?)+[>])");
-
+        private static readonly Regex match3 = new Regex(@"(?'content'[^<|>|\/]+)|(?'close'[<][\/]([^<|>|\/|\s]+)[>])|(?'open'[<]([^<|>|\/|\s]+)\s*([\s]*([^<|>|\/|\s]+)[=][""""]([^<|>|\/|\s]+)*[""""][\s]?)*[>])");
+        private static readonly Regex matchPropTag = new Regex(@"(?'openprop'[<](?'tagname'[^<|>|\/|\s]+)(?>\s)*(?'prop'[\s]?(?'propName'[^<|>|\/|\s]+)[=][""""](?'propValue'[^<|>|\/|\s]+)*[""""](?>[\s]*))*[>])");
+ 
         private static Regex _elementOpen = new Regex("<[A-Za-z]>", RegexOptions.IgnoreCase);
         private static Regex _elementClose = new Regex("</[A-Za-z]>", RegexOptions.IgnoreCase);
 
@@ -50,23 +50,35 @@ namespace TextEditorWPF.Model
             var result = new List<Token>();
             text = Regex.Replace(text, @"\r|\n", " ");
             MatchCollection? matchges = match3.Matches(text);
-            List<string> stringTokens = new List<string>();
             foreach (Match item in matchges)
             {
-                stringTokens.Add(item.Value);
-            }
-            var t = new List<Token>();
-            foreach (Match item in matchges)
-            {
+                if(String.IsNullOrEmpty(item.Value.Trim()))
+                {
+                    continue;
+                }
                 var token = new Token();
-                t.Add(token);
-                token.RawData = item.Value;
+                result.Add(token);
+                token.RawData = item.Value.Trim();
 
                 var openGroup = item.Groups["open"];
                 if(openGroup is not null && openGroup.Success)
                 {
                     token.Type = TokenType.Open;
-                    token.RawData = token.RawData.Substring(1, token.RawData.Length - 2);
+                    var propMatches = matchPropTag.Matches(token.RawData);
+
+                    token.RawData = propMatches[0].Groups["tagname"].Value;
+                    if(propMatches[0].Groups["prop"].Captures.Count > 0)
+                    {
+                        token.Properties = new List<TokenProperty>();
+                        for (int i = 0; i < propMatches[0].Groups["prop"].Captures.Count; i++)
+                        {
+                            var prop = new TokenProperty();
+                            prop.Name = propMatches[0].Groups["propName"].Captures[i].Value;
+                            prop.Value = propMatches[0].Groups["propValue"].Captures[i].Value;
+                            token.Properties.Add(prop);
+                        }
+                    }
+
                     continue;
                 }
 
@@ -78,83 +90,13 @@ namespace TextEditorWPF.Model
                     continue;
                 }
 
-                var openpropGroup = item.Groups["openprop"];
-                if (openpropGroup is not null && openpropGroup.Success)
-                {
-                    token.Type = TokenType.OpenProp;
-                    token.RawData = token.RawData.Substring(1, token.RawData.Length - 2);
-                    continue;
-                }
-
                 var contentGroup = item.Groups["content"];
                 if (contentGroup is not null && contentGroup.Success)
                 {
                     token.Type = TokenType.Content;
                     continue;
                 }
-
-
-
             }
-
-            //string buffer = "";
-            //for (int i = 0; i < stringTokens.Count; i++)
-            //{
-            //    if (stringTokens[i] == "<")
-            //    {
-            //        buffer += stringTokens[i];
-            //        continue;
-            //    }
-            //    if (stringTokens[i] == ">")
-            //    {
-            //        buffer += stringTokens[i];
-            //        stringTokens.Add(buffer);
-            //        buffer = "";
-            //        continue;
-            //    }
-            //    if (buffer.Length > 0)
-            //    {
-            //        buffer += stringTokens[i];
-            //        continue;
-            //    }
-            //    else
-            //    {
-            //        stringTokens.Add(stringTokens[i]);
-            //    }
-            //}
-
-            foreach (var strToken in stringTokens)
-            {
-                var token = new Token() { RawData = strToken };
-                if (strToken[0] == '<' && strToken[^1] == '>')
-                {
-                    if (strToken.Any(x => x == '/'))
-                    {
-                        token.Type = TokenType.Close;
-                        token.RawData = token.RawData.Substring(2, token.RawData.Length - 3);
-                    }
-                    else
-                    {
-                        token.Type = TokenType.Open;
-                        
-                        var str = token.RawData.Substring(1, token.RawData.Length - 2);
-                        var rMatch = matchPropTag.Matches(str);
-                        if (rMatch.Count < 1)
-                        {
-                            token.RawData = str;
-                        } else
-                        {
-
-                        }
-                    }
-                }
-                else
-                {
-                    token.Type = TokenType.Content;
-                }
-                result.Add(token);
-            }
-
             return result;
         }
 

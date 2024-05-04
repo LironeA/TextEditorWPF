@@ -29,11 +29,15 @@
                  TextWrapping="Wrap"
                  TextChanged="TextBox_TextChanged">
         </TextBox>
-        <Canvas x:Name="canvas"
-                Grid.Column="1"
-                Grid.Row="1"
-                Background="White"
-                Margin="5" />
+        <ScrollViewer Grid.Column="1"
+                      Grid.Row="1">
+            <Canvas x:Name="canvas"
+                    Width="21cm"
+                    Height="29.7cm"
+                    Background="White"
+                    Margin="5" />
+        </ScrollViewer>
+
         <Button Content="Compile"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"

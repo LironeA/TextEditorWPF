@@ -92,4 +92,7 @@ namespace TextEditorWPF.Model
             }
         }
     }
+
+
+    public class GridProperty<E>
 }

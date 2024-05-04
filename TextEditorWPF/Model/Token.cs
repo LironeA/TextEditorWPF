@@ -11,6 +11,7 @@ namespace TextEditorWPF.Model
         public string RawData { get; set; }
         public int Level { get; set; }
         public TokenType Type { get; set; }
+        public List<TokenProperty> Properties { get; set; }
         public List<Token> Children { get; set;}
     }
 
@@ -20,6 +21,11 @@ namespace TextEditorWPF.Model
         Open = 1,
         Close = 2,
         Content = 3,
-        OpenProp = 4,
+    }
+
+    public class TokenProperty
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
     }
 }
