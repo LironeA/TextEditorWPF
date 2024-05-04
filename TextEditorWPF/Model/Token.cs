@@ -19,6 +19,7 @@ namespace TextEditorWPF.Model
         None = 0,
         Open = 1,
         Close = 2,
-        Content = 3
+        Content = 3,
+        OpenProp = 4,
     }
 }

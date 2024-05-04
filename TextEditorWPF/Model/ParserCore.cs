@@ -55,7 +55,48 @@ namespace TextEditorWPF.Model
             {
                 stringTokens.Add(item.Value);
             }
-            
+            var t = new List<Token>();
+            foreach (Match item in matchges)
+            {
+                var token = new Token();
+                t.Add(token);
+                token.RawData = item.Value;
+
+                var openGroup = item.Groups["open"];
+                if(openGroup is not null && openGroup.Success)
+                {
+                    token.Type = TokenType.Open;
+                    token.RawData = token.RawData.Substring(1, token.RawData.Length - 2);
+                    continue;
+                }
+
+                var closeGroup = item.Groups["close"];
+                if (closeGroup is not null && closeGroup.Success)
+                {
+                    token.Type = TokenType.Close;
+                    token.RawData = token.RawData.Substring(2, token.RawData.Length - 3);
+                    continue;
+                }
+
+                var openpropGroup = item.Groups["openprop"];
+                if (openpropGroup is not null && openpropGroup.Success)
+                {
+                    token.Type = TokenType.OpenProp;
+                    token.RawData = token.RawData.Substring(1, token.RawData.Length - 2);
+                    continue;
+                }
+
+                var contentGroup = item.Groups["content"];
+                if (contentGroup is not null && contentGroup.Success)
+                {
+                    token.Type = TokenType.Content;
+                    continue;
+                }
+
+
+
+            }
+
             //string buffer = "";
             //for (int i = 0; i < stringTokens.Count; i++)
             //{
