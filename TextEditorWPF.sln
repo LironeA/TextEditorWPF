@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextEditorWPF", "TextEditorWPF\TextEditorWPF.csproj", "{8CEFCB9E-80CC-42E8-AC47-49B9D1DFA364}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextEditorWPF", "TextEditorWPF\TextEditorWPF.csproj", "{8CEFCB9E-80CC-42E8-AC47-49B9D1DFA364}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1", "TestProject1\TestProject1.csproj", "{98742517-D928-4BB5-BD73-84D8740C34E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{8CEFCB9E-80CC-42E8-AC47-49B9D1DFA364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CEFCB9E-80CC-42E8-AC47-49B9D1DFA364}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CEFCB9E-80CC-42E8-AC47-49B9D1DFA364}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98742517-D928-4BB5-BD73-84D8740C34E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98742517-D928-4BB5-BD73-84D8740C34E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98742517-D928-4BB5-BD73-84D8740C34E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98742517-D928-4BB5-BD73-84D8740C34E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

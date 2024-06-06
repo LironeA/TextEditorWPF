@@ -21,19 +21,20 @@ namespace TextEditorWPF.ViewModel
 
         public string Text;
         public Canvas Canvas;
+        public ParserCore _parcerCore;
 
         #endregion
 
         public MainWindowViewModel()
         {
-
+            _parcerCore = new ParserCore();
         }
 
         public async Task TextChanged(string text)
         {
             Text = text;
-            Debug.WriteLine(Text);
-            var document = ParserCore.ProccesText(Text);
+            System.Diagnostics.Debug.WriteLine(Text);
+            var document = _parcerCore.ProccesText(Text);
             CnavasDrawable.Draw(Canvas, document);
         }
     }
@@ -46,16 +47,16 @@ namespace TextEditorWPF.ViewModel
         {
             canvas.Children.Clear();
 
-            Rectangle rect = new Rectangle();
-            rect.Fill = Brushes.White;
-            Canvas.SetLeft(rect, 0);
-            Canvas.SetTop(rect, 0);
-            Canvas.SetZIndex(rect, 0);
+            //Rectangle rect = new Rectangle();
+            //rect.Fill = Brushes.White;
+            //Canvas.SetLeft(rect, 0);
+            //Canvas.SetTop(rect, 0);
+            //Canvas.SetZIndex(rect, 0);
 
-            rect.Width = canvas.ActualWidth;
-            rect.Height = canvas.ActualHeight;
+            //rect.Width = canvas.ActualWidth;
+            //rect.Height = canvas.ActualHeight;
 
-            canvas.Children.Add(rect);
+            //canvas.Children.Add(rect);
 
             ElementDrawResult result = new ElementDrawResult();
             document.Elements[0].Draw(canvas, ref result);

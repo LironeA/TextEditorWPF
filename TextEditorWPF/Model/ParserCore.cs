@@ -10,10 +10,18 @@ using System.Windows.Controls;
 
 namespace TextEditorWPF.Model
 {
-    public static class ParserCore
+    public class ParserCore
     {
+        private readonly Regex matchTags;
+        private readonly Regex matchPropTag;
 
-        public static Document ProccesText(string text)
+        public ParserCore()
+        {
+            matchTags = new Regex(@"(?'content'[^<|>|\/]+)|(?'close'[<][\/]([^<|>|\/|\s]+)[>])|(?'open'[<]([^<|>|\/|\s]+)\s*([\s]*([^<|>|\/|\s]+)[=][""""]([^<|>|\/|\s]+)*[""""][\s]?)*[>])");
+            matchPropTag = new Regex(@"(?'openprop'[<](?'tagname'[^<|>|\/|\s]+)(?>\s)*(?'prop'[\s]?(?'propName'[^<|>|\/|\s]+)[=][""""](?'propValue'[^<|>|\/|\s]+)*[""""](?>[\s]*))*[>])");
+        }
+
+        public Document ProccesText(string text)
         {
             try
             {
@@ -37,19 +45,13 @@ namespace TextEditorWPF.Model
 
 
 
-        private static readonly Regex DivadersRegex = new Regex(@"([\|\&\\])|([\(\)\^\/\<\>\\\s])");
-        private static readonly Regex match = new Regex(@"[<][\/]?\w+[>]|[^<|^>|\s]+");
-        private static readonly Regex match3 = new Regex(@"(?'content'[^<|>|\/]+)|(?'close'[<][\/]([^<|>|\/|\s]+)[>])|(?'open'[<]([^<|>|\/|\s]+)\s*([\s]*([^<|>|\/|\s]+)[=][""""]([^<|>|\/|\s]+)*[""""][\s]?)*[>])");
-        private static readonly Regex matchPropTag = new Regex(@"(?'openprop'[<](?'tagname'[^<|>|\/|\s]+)(?>\s)*(?'prop'[\s]?(?'propName'[^<|>|\/|\s]+)[=][""""](?'propValue'[^<|>|\/|\s]+)*[""""](?>[\s]*))*[>])");
- 
-        private static Regex _elementOpen = new Regex("<[A-Za-z]>", RegexOptions.IgnoreCase);
-        private static Regex _elementClose = new Regex("</[A-Za-z]>", RegexOptions.IgnoreCase);
+        
 
-        public static List<Token> Tokenize(string text)
+        public List<Token> Tokenize(string text)
         {
             var result = new List<Token>();
             text = Regex.Replace(text, @"\r|\n", " ");
-            MatchCollection? matchges = match3.Matches(text);
+            MatchCollection? matchges = matchTags.Matches(text);
             foreach (Match item in matchges)
             {
                 if(String.IsNullOrEmpty(item.Value.Trim()))
@@ -100,26 +102,26 @@ namespace TextEditorWPF.Model
             return result;
         }
 
-        public static void AsignLevels(List<Token> tokens)
+        public void AsignLevels(List<Token> tokens)
         {
-            int lavel = 0;
+            int level = 0;
             foreach (var token in tokens)
             {
                 if (token.Type == TokenType.Close)
                 {
-                    lavel--;
+                    level--;
                 }
-                token.Level = lavel;
+                token.Level = level;
                 if (token.Type == TokenType.Open)
                 {
-                    lavel++;
+                    level++;
                 }
 
 
             }
         }
 
-        public static List<Token> CreateTree(List<Token> tokens, int level = 0)
+        public List<Token> CreateTree(List<Token> tokens, int level = 0)
         {
             var result = new List<Token>();
 
@@ -138,7 +140,7 @@ namespace TextEditorWPF.Model
             return result;
         }
 
-        public static List<Element> CreateElementTree(List<Token> tokens)
+        public List<Element> CreateElementTree(List<Token> tokens)
         {
             if (tokens is null) return null;
             var result = new List<Element>();

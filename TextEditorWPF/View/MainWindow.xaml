@@ -24,6 +24,7 @@
         </Grid.ColumnDefinitions>
         <TextBox x:Name="textBox"
                  Grid.Row="1"
+                 FontSize="20"
                  Margin="5"
                  AcceptsReturn="True"
                  TextWrapping="Wrap"
@@ -32,10 +33,10 @@
         <ScrollViewer Grid.Column="1"
                       Grid.Row="1">
             <Canvas x:Name="canvas"
-                    Width="21cm"
-                    Height="29.7cm"
-                    Background="White"
-                    Margin="5" />
+                    Background="Transparent"
+                    Margin="10"
+                    ClipToBounds="True" />
+
         </ScrollViewer>
 
         <Button Content="Compile"
@@ -43,6 +44,5 @@
                 VerticalAlignment="Stretch"
                 Margin="5"
                 Click="Button_Click" />
-
     </Grid>
 </Window>
